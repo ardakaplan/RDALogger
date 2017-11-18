@@ -1,8 +1,15 @@
-package com.ardakaplan.encryptor.ui;
+package com.ardakaplan.rdalibrary.logger;
 
 import android.util.Log;
 
 /**
+ * To use this class, once you must initialize and set log mechanism for normal/http or lifecycle
+ * <p>
+ * RDALogger.initialize("appname").enableLogging(true).enableLifeCycleLogging(true).enableHttpLogging(true);
+ * <p>
+ * And than call static info/debug/warn/error methods whereever you want
+ *
+ * <p>
  * Created by ardakaplan on 22/09/17.
  * <p/>
  * www.ardakaplan.com
@@ -11,23 +18,33 @@ import android.util.Log;
  */
 public final class RDALogger {
 
-    private static final String METHOD_CALLED = "   ///   METHOD_CALLED";
     private static final String IN_CLASS = "IN CLASS : ";
     private static final String IN_METHOD = "   ///   IN METHOD : ";
-    private static final String ANCHOR = "   ///   ANCHOR : ";
     private static RDALogger rdaLogger = null;
     private static boolean enableLifeCycleLogs = false;
     private static boolean enableLogs = false;
     private static boolean enableHttpLogs = false;
     private static String TAG = "";
 
+    /**
+     * singleton design pattern
+     */
     private RDALogger() {
 
     }
 
-    public static RDALogger start(String applicationName) {
+    /**
+     * To use RDALogger; call this first and enable logging mechanism by calling specific methods
+     *
+     * @param applicationName application name will be showed in logcat
+     * @return rdalogger instance
+     */
+    public static RDALogger initialize(String applicationName) {
 
-        rdaLogger = new RDALogger();
+        if (rdaLogger == null) {
+
+            rdaLogger = new RDALogger();
+        }
 
         TAG = applicationName;
 
@@ -36,30 +53,137 @@ public final class RDALogger {
         return rdaLogger;
     }
 
-    private static StackTraceElement getStackTraceElement(int index) {
+    /**
+     * enables normal logging info/debug/warn/error
+     *
+     * @param enabled true or false
+     * @return rdalogger instance
+     */
+    public RDALogger enableLogging(boolean enabled) {
 
-        return Thread.currentThread().getStackTrace()[index];
+        enableLogs = enabled;
+
+        Log.i(TAG, " RDALogger logging enability : " + enableLogs);
+
+        return rdaLogger;
     }
 
-    private static String getMethodName() {
+    /**
+     * enables life cycle logging
+     *
+     * @param enabled true or false
+     * @return rdalogger instance
+     */
+    public RDALogger enableLifeCycleLogging(boolean enabled) {
 
-        return getStackTraceElement(5).getMethodName();
+        enableLifeCycleLogs = enabled;
+
+        Log.i(TAG, " RDALogger life cycle logging enability : " + enableLifeCycleLogs);
+
+        return rdaLogger;
     }
 
-    private static int getLineNumber() {
+    /**
+     * @param enabled true or false
+     * @return rdalogger instance
+     */
+    public RDALogger enableHttpLogging(boolean enabled) {
 
-        return getStackTraceElement(5).getLineNumber();
+        enableHttpLogs = enabled;
+
+        Log.i(TAG, " RDALogger http logging enability : " + enableHttpLogs);
+
+        return rdaLogger;
     }
 
-    private static String getClassName() {
+    /**
+     * Every lifecycle method must use this method for logging,
+     *
+     * @param className className, fragment or activity
+     */
+    public static void logLifeCycle(String className) {
 
-        String className = getStackTraceElement(5).getClassName();
+        if (enableLifeCycleLogs && enableLogs) {
 
-        int lastIndexOfPoint = className.lastIndexOf(".");
+            Log.d(TAG, IN_CLASS + "(" + className + ".java:0)" + IN_METHOD + StackTraceProcesses.getMethodName() + "\nMETHOD_CALLED\n ");
+        }
+    }
 
-        className = className.substring(lastIndexOfPoint + 1, className.length());
+    /**
+     * writing http request in different color
+     * <p>
+     * uses normal log level VERBOSE
+     *
+     * @param text object to write
+     */
+    public static void logHttpRequest(Object text) {
 
-        return className;
+        if (enableHttpLogs && enableLogs) {
+
+            Log.v(TAG, editMessage(text));
+        }
+    }
+
+
+    public static void debug(Object text) {
+
+        if (enableLogs) {
+
+            Log.d(TAG, editMessage(text));
+        }
+    }
+
+    public static void info(Object text) {
+
+        if (enableLogs) {
+
+            Log.i(TAG, editMessage(text));
+        }
+    }
+
+    public static void warn(Object text) {
+
+        if (enableLogs) {
+
+            Log.w(TAG, editMessage(text));
+        }
+    }
+
+    public static void verbose(Object text) {
+
+        if (enableLogs) {
+
+            Log.v(TAG, editMessage(text));
+        }
+    }
+
+    public static void error(Object text) {
+
+        if (enableLogs) {
+
+            Log.e(TAG, editMessage(text));
+        }
+    }
+
+    public static void error(Throwable throwable) {
+
+        if (throwable != null && enableLogs) {
+
+            Log.e(TAG, "", throwable);
+        }
+    }
+
+    public static void error(Object text, Throwable throwable) {
+
+        if (throwable != null && enableLogs) {
+
+            Log.e(TAG, editMessage(text), throwable);
+        }
+    }
+
+    private static StackTraceElement getStackTrace() {
+
+        return Thread.currentThread().getStackTrace()[5];
     }
 
     private static String getAnchorLink(String className, int lineNumber) {
@@ -67,68 +191,9 @@ public final class RDALogger {
         return "(" + className + ".java:" + lineNumber + ")";
     }
 
-    /**
-     * Yasam dongusu loglari icin, sadece sinif ismiyle cagrilmasi yeter
-     *
-     * @param className
-     */
-    public static void logLifeCycle(String className) {
+    private static String editMessage(Object text) {
 
-        if (enableLifeCycleLogs && enableLogs) {
-
-            Log.d(TAG, IN_CLASS + className + IN_METHOD + getMethodName() + METHOD_CALLED + ANCHOR + getAnchorLink(getClassName(), getLineNumber()));
-        }
-    }
-
-    public static void logHttpRequest(Object text) {
-
-        text = checkUsage(text);
-
-        if (enableHttpLogs && enableLogs) {
-
-            Log.v(TAG, IN_CLASS + getClassName() + IN_METHOD + getMethodName() + ANCHOR + getAnchorLink(getClassName(), getLineNumber()) + "\n" + text.toString() + "\n   ");
-        }
-    }
-
-    public static void info(Object text) {
-
-        text = checkUsage(text);
-
-        if (enableLogs) {
-
-            Log.i(TAG, IN_CLASS + getClassName() + IN_METHOD + getMethodName() + ANCHOR + getAnchorLink(getClassName(), getLineNumber()) + "\n" + text.toString() + "\n   ");
-        }
-    }
-
-
-    public static void debug(Object text) {
-
-        text = checkUsage(text);
-
-        if (enableLogs) {
-
-            Log.d(TAG, IN_CLASS + getClassName() + IN_METHOD + getMethodName() + ANCHOR + getAnchorLink(getClassName(), getLineNumber()) + "\n" + text.toString() + "\n   ");
-        }
-    }
-
-    public static void warn(Object text) {
-
-        text = checkUsage(text);
-
-        if (enableLogs) {
-
-            Log.w(TAG, IN_CLASS + getClassName() + IN_METHOD + getMethodName() + ANCHOR + getAnchorLink(getClassName(), getLineNumber()) + "\n" + text.toString() + "\n   ");
-        }
-    }
-
-    public static void verbose(Object text) {
-
-        text = checkUsage(text);
-
-        if (enableLogs) {
-
-            Log.v(TAG, IN_CLASS + getClassName() + IN_METHOD + getMethodName() + ANCHOR + getAnchorLink(getClassName(), getLineNumber()) + "\n" + text.toString() + "\n   ");
-        }
+        return IN_CLASS + getAnchorLink(StackTraceProcesses.getClassName(), StackTraceProcesses.getLineNumber()) + IN_METHOD + StackTraceProcesses.getMethodName() + "\n" + checkUsage(text).toString() + "\n ";
     }
 
     private static Object checkUsage(Object object) {
@@ -143,61 +208,34 @@ public final class RDALogger {
         }
     }
 
-    public static void error(Object text) {
+    /*
+     *All StackTrace operations should be in this class for better understanding
+     */
+    private static abstract class StackTraceProcesses {
 
-        text = checkUsage(text);
+        private static String getMethodName() {
 
-        if (enableLogs) {
+            return getStackTrace().getMethodName();
+        }
 
+        private static int getLineNumber() {
 
-            Log.e(TAG, IN_CLASS + getClassName() + IN_METHOD + getMethodName() + ANCHOR + getAnchorLink(getClassName(), getLineNumber()) + " \n" + text.toString() + "\n   ");
+            return getStackTrace().getLineNumber();
+        }
+
+        private static String getClassName() {
+
+            String className = getStackTrace().getClassName();
+
+            className = className.substring(className.lastIndexOf(".") + 1, className.length());
+
+            //inner classes put $ on the classname, so we clear it off
+            if (className.contains("$")) {
+
+                className = className.substring(0, className.indexOf("$"));
+            }
+
+            return className;
         }
     }
-
-    public static void error(Throwable throwable) {
-
-        if (throwable != null && enableLogs) {
-
-            Log.e(TAG, IN_CLASS + getClassName() + IN_METHOD + getMethodName() + ANCHOR + getAnchorLink(getClassName(), getLineNumber()), throwable);
-        }
-    }
-
-    public static void error(Object text, Throwable throwable) {
-
-        text = checkUsage(text);
-
-        if (throwable != null && enableLogs) {
-
-            Log.e(TAG, IN_CLASS + getClassName() + IN_METHOD + getMethodName() + ANCHOR + getAnchorLink(getClassName(), getLineNumber()) + " \n" + text.toString() + "\n   ", throwable);
-        }
-    }
-
-    public RDALogger enableLogging(boolean enability) {
-
-        enableLogs = enability;
-
-        Log.i(TAG, " RDALogger logging enability : " + enableLogs);
-
-        return rdaLogger;
-    }
-
-    public RDALogger enableLifeCycleLogging(boolean enability) {
-
-        enableLifeCycleLogs = enability;
-
-        Log.i(TAG, " RDALogger life cycle logging enability : " + enableLifeCycleLogs);
-
-        return rdaLogger;
-    }
-
-    public RDALogger enableHttpLogging(boolean enability) {
-
-        enableHttpLogs = enability;
-
-        Log.i(TAG, " RDALogger http logging enability : " + enableHttpLogs);
-
-        return rdaLogger;
-    }
-
-
 }
