@@ -8,7 +8,7 @@ import android.util.Log;
  * RDALogger.initialize("appname").enableLogging(true).enableLifeCycleLogging(true).enableHttpLogging(true);
  * <p>
  * And than call static info/debug/warn/error methods whereever you want
- *
+ * <p>
  * <p>
  * Created by ardakaplan on 22/09/17.
  * <p/>
@@ -16,6 +16,7 @@ import android.util.Log;
  * <p/>
  * arda.kaplan09@gmail.com
  */
+@SuppressWarnings({"SameParameterValue", "UnusedReturnValue"})
 public final class RDALogger {
 
     private static final String IN_CLASS = "IN CLASS : ";
@@ -39,7 +40,7 @@ public final class RDALogger {
      * @param applicationName application name will be showed in logcat
      * @return rdalogger instance
      */
-    public static RDALogger initialize(String applicationName) {
+    public static RDALogger start(String applicationName) {
 
         if (rdaLogger == null) {
 
@@ -183,7 +184,7 @@ public final class RDALogger {
 
     private static StackTraceElement getStackTrace() {
 
-        return Thread.currentThread().getStackTrace()[5];
+        return Thread.currentThread().getStackTrace()[8];
     }
 
     private static String getAnchorLink(String className, int lineNumber) {
