@@ -1,4 +1,4 @@
-package com.ardakaplan.rdalibrary.logger;
+package com.ardakaplan.rdalogger;
 
 import android.util.Log;
 
@@ -16,7 +16,7 @@ import android.util.Log;
  * <p/>
  * arda.kaplan09@gmail.com
  */
-@SuppressWarnings({"SameParameterValue", "UnusedReturnValue"})
+@SuppressWarnings({"SameParameterValue", "UnusedReturnValue", "unused"})
 public final class RDALogger {
 
     private static final String IN_CLASS = "IN CLASS : ";
