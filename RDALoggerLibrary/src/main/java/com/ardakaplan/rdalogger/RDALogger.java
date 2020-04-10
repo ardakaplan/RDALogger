@@ -20,7 +20,7 @@ import android.util.Log;
 public final class RDALogger {
 
     private static final String IN_CLASS = "IN CLASS : ";
-    private static final String IN_METHOD = "   ///   IN METHOD : ";
+    private static final String IN_METHOD = "   ---   IN METHOD : ";
     private static RDALogger rdaLogger = null;
     private static boolean enableLifeCycleLogs = false;
     private static boolean enableLogs = false;
@@ -189,7 +189,7 @@ public final class RDALogger {
 
     private static String getAnchorLink(String className, int lineNumber) {
 
-        return "(" + className + ".java:" + lineNumber + ")";
+        return "(" + className + ".kt:" + lineNumber + ") --- (" + className + ".java:" + lineNumber + ")";
     }
 
     private static String editMessage(Object text) {
