@@ -109,7 +109,26 @@ public final class RDALogger {
 
     private static String getAnchorLink(String className, int lineNumber) {
 
-        return "(" + className + ".java:" + lineNumber + ")";
+        StackTraceElement y = Thread.currentThread().getStackTrace()[5];
+
+        try {
+            Class<?> act = Class.forName(y.getClassName());
+
+            if (KotlinClassHelper.Companion.isKotlinClass(act)) {
+
+                return "(" + className + ".kt:" + lineNumber + ")";
+
+            } else {
+
+                return "(" + className + ".java:" + lineNumber + ")";
+            }
+
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return "";
     }
 
     private static String editMessage(Object text) {
