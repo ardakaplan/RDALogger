@@ -2,6 +2,8 @@ package com.ardakaplan.rdalogger;
 
 import android.util.Log;
 
+import kotlin.Metadata;
+
 /**
  * To use this class, once you must initialize and set log mechanism for normal/http or lifecycle
  * <p>
@@ -109,12 +111,11 @@ public final class RDALogger {
 
     private static String getAnchorLink(String className, int lineNumber) {
 
-        StackTraceElement y = Thread.currentThread().getStackTrace()[5];
-
         try {
-            Class<?> act = Class.forName(y.getClassName());
 
-            if (KotlinClassHelper.Companion.isKotlinClass(act)) {
+            Class<?> act = Class.forName(Thread.currentThread().getStackTrace()[5].getClassName());
+
+            if (act.getAnnotation(Metadata.class) != null) {
 
                 return "(" + className + ".kt:" + lineNumber + ")";
 
@@ -123,12 +124,12 @@ public final class RDALogger {
                 return "(" + className + ".java:" + lineNumber + ")";
             }
 
-
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+
+//            e.printStackTrace();
         }
 
-        return "";
+        return "could't find the class";
     }
 
     private static String editMessage(Object text) {

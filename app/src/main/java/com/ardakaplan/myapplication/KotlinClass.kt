@@ -22,7 +22,7 @@ class KotlinClass {
 
         RDALogger.info("THIS IS KOTLIN LOG")
 
-        JavaClass.test()
+//        JavaClass.test()
     }
 
 }
