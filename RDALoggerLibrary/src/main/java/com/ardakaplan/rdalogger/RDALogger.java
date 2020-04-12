@@ -2,6 +2,8 @@ package com.ardakaplan.rdalogger;
 
 import android.util.Log;
 
+import kotlin.Metadata;
+
 /**
  * To use this class, once you must initialize and set log mechanism for normal/http or lifecycle
  * <p>
@@ -21,11 +23,8 @@ public final class RDALogger {
 
     private static final String IN_CLASS = "IN CLASS : ";
     private static final String IN_METHOD = "   ---   IN METHOD : ";
-    private static RDALogger rdaLogger = null;
-    private static boolean enableLifeCycleLogs = false;
-    private static boolean enableLogs = false;
-    private static boolean enableHttpLogs = false;
-    private static String TAG = "";
+
+    private RDALoggerConfig rdaLoggerConfig;
 
     /**
      * singleton design pattern
@@ -34,68 +33,6 @@ public final class RDALogger {
 
     }
 
-    /**
-     * To use RDALogger; call this first and enable logging mechanism by calling specific methods
-     *
-     * @param applicationName application name will be showed in logcat
-     * @return rdalogger instance
-     */
-    public static RDALogger start(String applicationName) {
-
-        if (rdaLogger == null) {
-
-            rdaLogger = new RDALogger();
-        }
-
-        TAG = applicationName;
-
-        Log.i(TAG, " RDALogger initialized by " + TAG);
-
-        return rdaLogger;
-    }
-
-    /**
-     * enables normal logging info/debug/warn/error
-     *
-     * @param enabled true or false
-     * @return rdalogger instance
-     */
-    public RDALogger enableLogging(boolean enabled) {
-
-        enableLogs = enabled;
-
-        Log.i(TAG, " RDALogger logging enability : " + enableLogs);
-
-        return rdaLogger;
-    }
-
-    /**
-     * enables life cycle logging
-     *
-     * @param enabled true or false
-     * @return rdalogger instance
-     */
-    public RDALogger enableLifeCycleLogging(boolean enabled) {
-
-        enableLifeCycleLogs = enabled;
-
-        Log.i(TAG, " RDALogger life cycle logging enability : " + enableLifeCycleLogs);
-
-        return rdaLogger;
-    }
-
-    /**
-     * @param enabled true or false
-     * @return rdalogger instance
-     */
-    public RDALogger enableHttpLogging(boolean enabled) {
-
-        enableHttpLogs = enabled;
-
-        Log.i(TAG, " RDALogger http logging enability : " + enableHttpLogs);
-
-        return rdaLogger;
-    }
 
     /**
      * Every lifecycle method must use this method for logging,
@@ -104,81 +41,66 @@ public final class RDALogger {
      */
     public static void logLifeCycle(String className) {
 
-        if (enableLifeCycleLogs && enableLogs) {
+        if (RDALoggerConfig.enableLifeCycleLogs && RDALoggerConfig.enableLogs) {
 
-            Log.d(TAG, IN_CLASS + "(" + className + ".java:0)" + IN_METHOD + StackTraceProcesses.getMethodName() + "\nMETHOD_CALLED\n ");
-        }
-    }
-
-    /**
-     * writing http request in different color
-     * <p>
-     * uses normal log level VERBOSE
-     *
-     * @param text object to write
-     */
-    public static void logHttpRequest(Object text) {
-
-        if (enableHttpLogs && enableLogs) {
-
-            Log.v(TAG, editMessage(text));
+            Log.d(RDALoggerConfig.TAG, IN_CLASS + "(" + className + ".java:0)" + IN_METHOD + StackTraceProcesses.getMethodName() + "\nMETHOD_CALLED\n ");
         }
     }
 
 
     public static void debug(Object text) {
 
-        if (enableLogs) {
+        if (RDALoggerConfig.enableLogs) {
 
-            Log.d(TAG, editMessage(text));
+            Log.d(RDALoggerConfig.TAG, editMessage(text));
         }
     }
 
     public static void info(Object text) {
 
-        if (enableLogs) {
+        if (RDALoggerConfig.enableLogs) {
 
-            Log.i(TAG, editMessage(text));
+            Log.i(RDALoggerConfig.TAG, editMessage(text));
         }
     }
 
     public static void warn(Object text) {
 
-        if (enableLogs) {
+        if (RDALoggerConfig.enableLogs) {
 
-            Log.w(TAG, editMessage(text));
+            Log.w(RDALoggerConfig.TAG, editMessage(text));
         }
     }
 
     public static void verbose(Object text) {
 
-        if (enableLogs) {
+        if (RDALoggerConfig.enableLogs) {
 
-            Log.v(TAG, editMessage(text));
+            Log.v(RDALoggerConfig.TAG, editMessage(text));
         }
     }
 
     public static void error(Object text) {
 
-        if (enableLogs) {
+        if (RDALoggerConfig.enableLogs) {
 
-            Log.e(TAG, editMessage(text));
+            Log.e(RDALoggerConfig.TAG, editMessage(text));
         }
     }
 
     public static void error(Throwable throwable) {
 
-        if (throwable != null && enableLogs) {
+        if (throwable != null && RDALoggerConfig.enableLogs) {
 
-            Log.e(TAG, "", throwable);
+            Log.e(RDALoggerConfig.TAG, "", throwable);
         }
     }
 
     public static void error(Object text, Throwable throwable) {
 
-        if (throwable != null && enableLogs) {
+        if (throwable != null && RDALoggerConfig.enableLogs) {
 
-            Log.e(TAG, editMessage(text), throwable);
+            Log.e(RDALoggerConfig.TAG, editMessage(text), throwable);
         }
     }
 
@@ -189,7 +111,25 @@ public final class RDALogger {
 
     private static String getAnchorLink(String className, int lineNumber) {
 
-        return "(" + className + ".kt:" + lineNumber + ") --- (" + className + ".java:" + lineNumber + ")";
+        try {
+
+            Class<?> act = Class.forName(Thread.currentThread().getStackTrace()[5].getClassName());
+
+            if (act.getAnnotation(Metadata.class) != null) {
+
+                return "(" + className + ".kt:" + lineNumber + ")";
+
+            } else {
+
+                return "(" + className + ".java:" + lineNumber + ")";
+            }
+
+        } catch (ClassNotFoundException e) {
+
+//            e.printStackTrace();
+        }
+
+        return "could't find the class";
     }
 
     private static String editMessage(Object text) {
@@ -228,7 +168,7 @@ public final class RDALogger {
 
             String className = getStackTrace().getClassName();
 
-            className = className.substring(className.lastIndexOf(".") + 1, className.length());
+            className = className.substring(className.lastIndexOf(".") + 1);
 
             //inner classes put $ on the classname, so we clear it off
             if (className.contains("$")) {
