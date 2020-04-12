@@ -7,6 +7,7 @@ import com.ardakaplan.rdalogger.RDALogger;
  * <p>
  * ardakaplan101@gmail.com
  */
+@SuppressWarnings("ALL")
 public class JavaClass {
 
     public static void test() {

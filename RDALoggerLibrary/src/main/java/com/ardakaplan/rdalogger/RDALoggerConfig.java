@@ -7,17 +7,17 @@ import android.util.Log;
  * <p>
  * arda.kaplan09@gmail.com
  */
-@SuppressWarnings("JavaDoc")
+@SuppressWarnings({"UnusedReturnValue", "unused"})
 public final class RDALoggerConfig {
 
-    protected static RDALoggerConfig rdaLoggerConfig = new RDALoggerConfig();
+    private static RDALoggerConfig rdaLoggerConfig = new RDALoggerConfig();
 
-    protected static boolean enableLifeCycleLogs = false;
-    protected static boolean enableLogs = false;
+    static boolean enableLifeCycleLogs = false;
+    static boolean enableLogs = false;
 
     private static final String RDALOGGER_TAG = "RDALogger";
 
-    protected static String TAG = RDALOGGER_TAG;
+    static String TAG = RDALOGGER_TAG;
 
     private RDALoggerConfig() {
 

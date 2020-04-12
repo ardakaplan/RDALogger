@@ -11,18 +11,9 @@ class KotlinClass {
 
     companion object {
 
-        fun test2() {
+        fun test() {
 
             RDALogger.info("THIS IS KOTLIN LOG")
         }
     }
-
-
-    fun test() {
-
-        RDALogger.info("THIS IS KOTLIN LOG")
-
-//        JavaClass.test()
-    }
-
 }
