@@ -1,68 +1,99 @@
-**DESCRIPTION**
+  [![](https://jitpack.io/v/ardakaplan/RDALogger.svg)](https://jitpack.io/#ardakaplan/RDALogger)
+<img src="https://raw.githubusercontent.com/ardakaplan/RDALogger/master/images/image.png">  
 
-With this library, you can log your message with some info;
-- method name
-- class name
-- line number
-- anchor link
+## What is this for?
+You can see your log with **code line number**, **wrapper method** and **class name**. 
 
-Anchor link is the most valueable thing I think. With this link, when you click log, system opens to this line of code.
+And if you click the anchor, you can jump the log line.
 
+Now **kotlin** support is enabled =)
 
+<img src="https://raw.githubusercontent.com/ardakaplan/RDALogger/master/images/output.png">  
 
-To use library, you must do implementations below.
+## Prerequisites  
+  
+Add this in your root `build.gradle` file (**not** your module (app) `build.gradle` file):  
+  
+```gradle  
+allprojects {  
+   repositories {  
+      ...  
+      maven { url "https://jitpack.io" }  
+   }  
+}  
+``` 
 
-<br>
-in root level gradle
+## Dependency  
+  
+Add this to your module's `build.gradle` file (make sure the version matches the JitPack badge above):  
+  
+```gradle  
+dependencies {  
+   ...  
+   implementation 'com.github.ardakaplan:RDALogger:1.0.0' 
+}  
+```  
+  
+## Configuration  
+  
+This step is optional, but if you want you can configure some Toasty parameters. Place this anywhere in your app:  
+  
+```java  
+RDALoggerConfig.setup("TAG NAME")//label that you want to see in logcat (ex. application name)
+			   .enableLogging(true);//enable log mechanizm, if you don't want to see logs. Default is false
+```
+  
+## Usage  
+  
+You can find a method for each situation. Every method calls its original **android.util.Log** method with special features.
+  
+Info Log:
+  
+``` java  
+RDALogger.info("info");
+```  
+Debug Log:
+  
+``` java  
+RDALogger.debug("debug");
+```  
+Verbose Log:
+  
+``` java  
+RDALogger.verbose("verbose"); 
+```  
+Warn Log:
+  
+``` java  
+RDALogger.warn("warn");  
+```  
+Error Log:
+  
+``` java  
+RDALogger.error("error");
+```  
+Error Log only throwable:
+  
+``` java  
+RDALogger.error(new Throwable());
+```  
+  
+Error Log with throwable:
+``` java  
+RDALogger.error("error", new Throwable());
+```  
 
+## Logcat Output
+You can see your log with **code line number**, **wrapper method** and **class name**. 
 
-    allprojects {
+And if you click the anchor, you can jump the log line.
 
-        repositories {
-            ...
-            maven { url 'https://jitpack.io' }
-        }
-    }
+<img src="https://raw.githubusercontent.com/ardakaplan/RDALogger/master/images/output.png">  
+ 
 
-<br>
-in app level gradle
+## Change Log
 
-    dependencies { 
-        implementation 'com.github.ardakaplan:RDALogger:1.0.0' 
-    }
-<br>
-<br>
-For initializing library, you should start like this (in Application.class or before first use)
-
-    RDALogger.start("TAG NAME").enableLogging(true);
-<br>
-<br>
-And than you can log whatever you want;
-
-    RDALogger.info("info");
-    RDALogger.debug("debug");
-    RDALogger.verbose("verbose");
-    RDALogger.warn("warn");
-    RDALogger.error("error");
-    RDALogger.error(new Throwable());
-    RDALogger.error("error", new Throwable());
-
-<br>
-<br>
-And finally output shows you all you want (class name, method name, anchor link, message)
-
-    08-09 11:13:06.023 20025-20025/com.ardakaplan.application
-    I/Application: IN CLASS : (ENApplication.java:29) /// IN METHOD :
-    onCreate info
-
-**CHANGE LOG**
-
-`v1.0.0`
-
-- Library created
-
-`v1.0.1`
-
-- Readme completed =)
-
-[![](https://jitpack.io/v/ardakaplan/RDALogger.svg)](https://jitpack.io/#ardakaplan/RDALogger)
+ - **v1.0.0**
+	 - Library created
+  - **v2.0.0**
+	- Adding kotlin support
