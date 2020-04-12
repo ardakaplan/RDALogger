@@ -36,11 +36,11 @@ dependencies {
   
 ## Configuration  
   
-This step is optional, but if you want you can configure some Toasty parameters. Place this anywhere in your app:  
+Starting **RDALogger**
   
 ```java  
 RDALoggerConfig.setup("TAG NAME")//label that you want to see in logcat (ex. application name)
-			   .enableLogging(true);//enable log mechanizm, if you don't want to see logs. Default is false
+                .enableLogging(true);//enable log mechanizm, default is false
 ```
   
 ## Usage  
