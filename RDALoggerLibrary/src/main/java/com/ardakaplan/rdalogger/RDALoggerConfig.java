@@ -2,8 +2,6 @@ package com.ardakaplan.rdalogger;
 
 import android.util.Log;
 
-import java.util.logging.Logger;
-
 /**
  * Created by Arda Kaplan at 11-Apr-20
  * <p>
@@ -75,6 +73,12 @@ public final class RDALoggerConfig {
         return RDA_LOGGER_CONFIG;
     }
 
+    /**
+     * setting callback for listening every log
+     *
+     * @param rdaLogListener listener
+     * @return RDALoggerConfig instance
+     */
     public RDALoggerConfig setListener(RDALogListener rdaLogListener) {
 
         logListener = rdaLogListener;
@@ -84,7 +88,13 @@ public final class RDALoggerConfig {
 
     public interface RDALogListener {
 
-        void onLogReceived(LogType logType, String log);
+        /**
+         * if you want to save every logs into file or database , you should use this method
+         *
+         * @param RDALogFullData has full data about the log
+         *                       anchor,logType,className,lineNumber,methodName,pureLog
+         */
+        void onLogReceived(RDALogFullData RDALogFullData);
     }
 
 }

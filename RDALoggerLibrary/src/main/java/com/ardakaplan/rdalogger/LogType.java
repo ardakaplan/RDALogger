@@ -1,5 +1,7 @@
 package com.ardakaplan.rdalogger;
 
+import android.util.Log;
+
 /**
  * Created by Arda Kaplan at 4.08.2021 - 14:24
  * <p>
@@ -7,15 +9,15 @@ package com.ardakaplan.rdalogger;
  */
 public enum LogType {
 
-    VERBOSE(2),
-    DEBUG(3),
-    INFO(4),
-    WARN(5),
-    ERROR(6),
-    ASSERT(7),
+    VERBOSE(Log.VERBOSE),
+    DEBUG(Log.DEBUG),
+    INFO(Log.INFO),
+    WARN(Log.WARN),
+    ERROR(Log.ERROR),
+    //    ASSERT(Log.ASSERT),
     LIFE_CYCLE(-1);
 
-    private int priority;
+    private final int priority;
 
     LogType(int priority) {
         this.priority = priority;

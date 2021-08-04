@@ -30,57 +30,69 @@ Add this to your module's `build.gradle` file (make sure the version matches the
 ```gradle  
 dependencies {  
    ...  
-   implementation 'com.github.ardakaplan:RDALogger:#latest_version'
-}  
-```  
-  
-## Configuration  
-  
-Starting **RDALogger**
-  
-```java  
-RDALoggerConfig.setup("TAG NAME")//label that you want to see in logcat (ex. application name)
-                .enableLogging(true);//enable log mechanizm, default is false
+   implementation 'com.github.ardakaplan:RDALogger:1.0.0'
+}
 ```
-  
-## Usage  
-  
+
+## Configuration
+
+Starting **RDALogger**
+
+```java
+RDALoggerConfig.setup(getString(R.string.app_name))//label that you want to see in logcat (ex. application name)
+                .enableLogging(true)//enable log mechanizm, default is false
+                .enableLifeCycleLogging(false)//enable life cycle log mechanizm, default is false
+                .setListener(new RDALoggerConfig.RDALogListener() {//log listener
+
+                    @Override
+                    public void onLogReceived(RDALogFullData rdaLogFullData) {
+
+                        /**
+                         *{@link RDALogFullData} has full data about the log,
+                         * anchor,logType,className,lineNumber,methodName,pureLog
+                         *
+                         * called for every written logs,
+                         *
+                         * save to database, write to file, do what you want with this full log item
+                         */
+                    }
+                });
+```
+
+## Usage
+
 You can find a method for each situation. Every method calls its original **android.util.Log** method with special features.
-  
+
 Info Log:
-  
-``` java  
+
+``` java
 RDALogger.info("info");
-```  
+```
 Debug Log:
-  
-``` java  
+
+``` java
 RDALogger.debug("debug");
-```  
+```
 Verbose Log:
-  
-``` java  
-RDALogger.verbose("verbose"); 
-```  
+
+``` java
+RDALogger.verbose("verbose");
+```
 Warn Log:
-  
-``` java  
-RDALogger.warn("warn");  
-```  
+
+``` java
+RDALogger.warn("warn");
+```
 Error Log:
-  
-``` java  
+
+``` java
 RDALogger.error("error");
-```  
-Error Log only throwable:
-  
-``` java  
-RDALogger.error(new Throwable());
-```  
-  
-Error Log with throwable:
-``` java  
-RDALogger.error("error", new Throwable());
+```
+
+Life Cycle Log - Base class usage only:
+
+``` java
+RDALogger.logLifeCycle(getClass().getSimpleName());
 ```  
 
 ## Logcat Output
@@ -93,7 +105,9 @@ And if you click the anchor, you can jump the log line.
 
 ## Change Log
 
- - **v1.0.0**
-	 - Library created
-  - **v2.0.0**
+- **v1.0.0**
+ 	- Library created
+- **v2.0.0**
 	- Adding kotlin support
+- **v2.0.1**
+	- Adding log listener
