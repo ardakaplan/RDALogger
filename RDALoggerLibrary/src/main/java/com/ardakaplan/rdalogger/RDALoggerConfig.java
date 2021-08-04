@@ -10,10 +10,11 @@ import android.util.Log;
 @SuppressWarnings({"UnusedReturnValue", "unused"})
 public final class RDALoggerConfig {
 
-    private static RDALoggerConfig rdaLoggerConfig = new RDALoggerConfig();
+    private static final RDALoggerConfig RDA_LOGGER_CONFIG = new RDALoggerConfig();
 
     static boolean enableLifeCycleLogs = false;
     static boolean enableLogs = false;
+    static RDALogListener logListener = null;
 
     private static final String RDALOGGER_TAG = "RDALogger";
 
@@ -31,15 +32,15 @@ public final class RDALoggerConfig {
      */
     public static RDALoggerConfig setup(String applicationName) {
 
-        Log.i(RDALOGGER_TAG, "Hello This is RDALogger by Arda Kaplan.");
+        Log.i(RDALOGGER_TAG, "Hello, This is RDALogger by Arda Kaplan.");
 
         Log.i(RDALOGGER_TAG, "For more information about usage please visit the URL -> https://github.com/ardakaplan/RDALogger ");
 
-        TAG = applicationName;
-
         Log.i(RDALOGGER_TAG, "RDALogger initialized by " + TAG);
 
-        return rdaLoggerConfig;
+        TAG = applicationName;
+
+        return RDA_LOGGER_CONFIG;
     }
 
     /**
@@ -54,7 +55,7 @@ public final class RDALoggerConfig {
 
         Log.i(RDALOGGER_TAG, "RDALogger logging enability : " + enableLogs);
 
-        return rdaLoggerConfig;
+        return RDA_LOGGER_CONFIG;
     }
 
     /**
@@ -69,7 +70,31 @@ public final class RDALoggerConfig {
 
         Log.i(RDALOGGER_TAG, "RDALogger life cycle logging enability : " + enableLifeCycleLogs);
 
-        return rdaLoggerConfig;
+        return RDA_LOGGER_CONFIG;
+    }
+
+    /**
+     * setting callback for listening every log
+     *
+     * @param rdaLogListener listener
+     * @return RDALoggerConfig instance
+     */
+    public RDALoggerConfig setListener(RDALogListener rdaLogListener) {
+
+        logListener = rdaLogListener;
+
+        return RDA_LOGGER_CONFIG;
+    }
+
+    public interface RDALogListener {
+
+        /**
+         * if you want to save every logs into file or database , you should use this method
+         *
+         * @param RDALogFullData has full data about the log
+         *                       anchor,logType,className,lineNumber,methodName,pureLog
+         */
+        void onLogReceived(RDALogFullData RDALogFullData);
     }
 
 }

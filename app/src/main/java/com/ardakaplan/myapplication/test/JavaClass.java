@@ -1,4 +1,4 @@
-package com.ardakaplan.myapplication;
+package com.ardakaplan.myapplication.test;
 
 import com.ardakaplan.rdalogger.RDALogger;
 

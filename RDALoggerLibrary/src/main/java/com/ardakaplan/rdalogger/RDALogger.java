@@ -2,8 +2,6 @@ package com.ardakaplan.rdalogger;
 
 import android.util.Log;
 
-import kotlin.Metadata;
-
 /**
  * To use this class, once you must initialize and set log mechanism for normal/http or lifecycle
  * <p>
@@ -18,7 +16,7 @@ import kotlin.Metadata;
  * <p/>
  * arda.kaplan09@gmail.com
  */
-@SuppressWarnings({"SameParameterValue", "UnusedReturnValue", "unused"})
+
 public final class RDALogger {
 
     private static final String IN_CLASS = "IN CLASS : ";
@@ -36,105 +34,135 @@ public final class RDALogger {
 
     /**
      * Every lifecycle method must use this method for logging,
+     * <p>
+     * must use in base class
      *
-     * @param className className, fragment or activity
+     * @param className className, fragment or activity name
      */
     public static void logLifeCycle(String className) {
 
-        if (RDALoggerConfig.enableLifeCycleLogs && RDALoggerConfig.enableLogs) {
+        if (RDALoggerConfig.enableLifeCycleLogs) {
 
-            Log.d(RDALoggerConfig.TAG, IN_CLASS + "(" + className + ".java:0)" + IN_METHOD + StackTraceProcesses.getMethodName() + "\nMETHOD_CALLED\n ");
+            log(LogType.LIFE_CYCLE, className, true);
         }
     }
 
+    public static void info(Object object) {
 
-    public static void debug(Object text) {
+        log(LogType.INFO, object, false);
+    }
+
+    public static void debug(Object object) {
+
+        log(LogType.DEBUG, object, false);
+    }
+
+    public static void warn(Object object) {
+
+        log(LogType.WARN, object, false);
+    }
+
+    public static void verbose(Object object) {
+
+        log(LogType.VERBOSE, object, false);
+    }
+
+    public static void error(Object object) {
+
+        log(LogType.ERROR, object, false);
+    }
+
+    private static void log(LogType logType, Object object, boolean isLifeCycle) {
 
         if (RDALoggerConfig.enableLogs) {
 
-            Log.d(RDALoggerConfig.TAG, editMessage(text));
+            RDALogFullData logItem = getLogcatLog(logType, object, isLifeCycle);
+
+            String log;
+
+            if (isLifeCycle) {
+
+                log = logItem.getAnchorLink() + " - " + logItem.getMethodName() + " called";
+
+            } else {
+
+                log = logItem.getAnchorLink() + " - " + logItem.getMethodName() + "() -> " + logItem.getPureLog();
+            }
+
+            switch (logType) {
+
+                case INFO:
+
+                    Log.i(RDALoggerConfig.TAG, log);
+
+                    break;
+
+                case DEBUG:
+
+                    Log.d(RDALoggerConfig.TAG, log);
+
+                    break;
+
+                case WARN:
+
+                    Log.w(RDALoggerConfig.TAG, log);
+
+                    break;
+
+                case ERROR:
+
+                    Log.e(RDALoggerConfig.TAG, log);
+
+                    break;
+
+                case VERBOSE:
+                case LIFE_CYCLE:
+
+                    Log.v(RDALoggerConfig.TAG, log);
+
+                    break;
+
+            }
+
+            if (RDALoggerConfig.logListener != null) {
+
+                RDALoggerConfig.logListener.onLogReceived(logItem);
+
+            }
         }
     }
 
-    public static void info(Object text) {
+//    public static void error(Throwable throwable) {
+//
+//        if (throwable != null && RDALoggerConfig.enableLogs) {
+//
+//            Log.e(RDALoggerConfig.TAG, "", throwable);
+//        }
+//    }
+//
+//    public static void error(Object text, Throwable throwable) {
+//
+//        if (throwable != null && RDALoggerConfig.enableLogs) {
+//
+//            Log.e(RDALoggerConfig.TAG, editMessage(text), throwable);
+//        }
+//    }
 
-        if (RDALoggerConfig.enableLogs) {
+    private static RDALogFullData getLogcatLog(LogType logType, Object object, boolean isLifeCycle) {
 
-            Log.i(RDALoggerConfig.TAG, editMessage(text));
-        }
-    }
+        if (isLifeCycle) {
 
-    public static void warn(Object text) {
+            return new RDALogFullData(logType, object.toString(), 0, StackTraceProcesses.getMethodName(), "");
 
-        if (RDALoggerConfig.enableLogs) {
+        } else {
 
-            Log.w(RDALoggerConfig.TAG, editMessage(text));
-        }
-    }
-
-    public static void verbose(Object text) {
-
-        if (RDALoggerConfig.enableLogs) {
-
-            Log.v(RDALoggerConfig.TAG, editMessage(text));
-        }
-    }
-
-    public static void error(Object text) {
-
-        if (RDALoggerConfig.enableLogs) {
-
-            Log.e(RDALoggerConfig.TAG, editMessage(text));
-        }
-    }
-
-    public static void error(Throwable throwable) {
-
-        if (throwable != null && RDALoggerConfig.enableLogs) {
-
-            Log.e(RDALoggerConfig.TAG, "", throwable);
-        }
-    }
-
-    public static void error(Object text, Throwable throwable) {
-
-        if (throwable != null && RDALoggerConfig.enableLogs) {
-
-            Log.e(RDALoggerConfig.TAG, editMessage(text), throwable);
+            return new RDALogFullData(logType, StackTraceProcesses.getClassName(), StackTraceProcesses.getLineNumber(), StackTraceProcesses.getMethodName(), checkUsage(object).toString());
         }
     }
 
     private static StackTraceElement getStackTrace() {
 
-        return Thread.currentThread().getStackTrace()[8];
-    }
-
-    private static String getAnchorLink(String className, int lineNumber) {
-
-        try {
-
-            Class<?> act = Class.forName(Thread.currentThread().getStackTrace()[5].getClassName());
-
-            if (act.getAnnotation(Metadata.class) != null) {
-
-                return "(" + className + ".kt:" + lineNumber + ")";
-
-            } else {
-
-                return "(" + className + ".java:" + lineNumber + ")";
-            }
-
-        } catch (ClassNotFoundException e) {
-
-//            e.printStackTrace();
-        }
-
-        return "could't find the class";
-    }
-
-    private static String editMessage(Object text) {
-
-        return IN_CLASS + getAnchorLink(StackTraceProcesses.getClassName(), StackTraceProcesses.getLineNumber()) + IN_METHOD + StackTraceProcesses.getMethodName() + "\n" + checkUsage(text).toString() + "\n ";
+        return Thread.currentThread().getStackTrace()[9];
     }
 
     private static Object checkUsage(Object object) {
@@ -152,7 +180,7 @@ public final class RDALogger {
     /*
      *All StackTrace operations should be in this class for better understanding
      */
-    private static abstract class StackTraceProcesses {
+    private static class StackTraceProcesses {
 
         private static String getMethodName() {
 
