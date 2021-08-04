@@ -1,8 +1,10 @@
-package com.ardakaplan.myapplication;
+package com.ardakaplan.myapplication.ui;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+
+import com.ardakaplan.myapplication.R;
 
 /**
  * Created by Arda Kaplan at 4.08.2021 - 13:55

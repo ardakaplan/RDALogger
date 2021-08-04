@@ -2,8 +2,6 @@ package com.ardakaplan.rdalogger;
 
 import android.util.Log;
 
-import java.util.logging.Logger;
-
 import kotlin.Metadata;
 
 /**
@@ -45,18 +43,11 @@ public final class RDALogger {
 
         if (RDALoggerConfig.enableLifeCycleLogs && RDALoggerConfig.enableLogs) {
 
-            Log.v(RDALoggerConfig.TAG, editMessageForLifeCycle(className));
+            String log = editMessage(className);
 
-//            Log.d(RDALoggerConfig.TAG, IN_CLASS + "(" + className + ".java:0)" + IN_METHOD + StackTraceProcesses.getMethodName() + "\nMETHOD_CALLED\n ");
-        }
-    }
+            Log.v(RDALoggerConfig.TAG, log);
 
-
-    public static void debug(Object text) {
-
-        if (RDALoggerConfig.enableLogs) {
-
-            Log.d(RDALoggerConfig.TAG, editMessage(text));
+            sendToListener(LogType.LIFE_CYCLE, log);
         }
     }
 
@@ -64,7 +55,23 @@ public final class RDALogger {
 
         if (RDALoggerConfig.enableLogs) {
 
-            Log.i(RDALoggerConfig.TAG, editMessage(text));
+            String log = editMessage(text);
+
+            Log.i(RDALoggerConfig.TAG, log);
+
+            sendToListener(LogType.INFO, log);
+        }
+    }
+
+    public static void debug(Object text) {
+
+        if (RDALoggerConfig.enableLogs) {
+
+            String log = editMessage(text);
+
+            Log.d(RDALoggerConfig.TAG, log);
+
+            sendToListener(LogType.DEBUG, log);
         }
     }
 
@@ -72,7 +79,11 @@ public final class RDALogger {
 
         if (RDALoggerConfig.enableLogs) {
 
-            Log.w(RDALoggerConfig.TAG, editMessage(text));
+            String log = editMessage(text);
+
+            Log.w(RDALoggerConfig.TAG, log);
+
+            sendToListener(LogType.WARN, log);
         }
     }
 
@@ -80,7 +91,11 @@ public final class RDALogger {
 
         if (RDALoggerConfig.enableLogs) {
 
-            Log.v(RDALoggerConfig.TAG, editMessage(text));
+            String log = editMessage(text);
+
+            Log.v(RDALoggerConfig.TAG, log);
+
+            sendToListener(LogType.VERBOSE, log);
         }
     }
 
@@ -88,25 +103,29 @@ public final class RDALogger {
 
         if (RDALoggerConfig.enableLogs) {
 
-            Log.e(RDALoggerConfig.TAG, editMessage(text));
+            String log = editMessage(text);
+
+            Log.e(RDALoggerConfig.TAG, log);
+
+            sendToListener(LogType.ERROR, log);
         }
     }
 
-    public static void error(Throwable throwable) {
-
-        if (throwable != null && RDALoggerConfig.enableLogs) {
-
-            Log.e(RDALoggerConfig.TAG, "", throwable);
-        }
-    }
-
-    public static void error(Object text, Throwable throwable) {
-
-        if (throwable != null && RDALoggerConfig.enableLogs) {
-
-            Log.e(RDALoggerConfig.TAG, editMessage(text), throwable);
-        }
-    }
+//    public static void error(Throwable throwable) {
+//
+//        if (throwable != null && RDALoggerConfig.enableLogs) {
+//
+//            Log.e(RDALoggerConfig.TAG, "", throwable);
+//        }
+//    }
+//
+//    public static void error(Object text, Throwable throwable) {
+//
+//        if (throwable != null && RDALoggerConfig.enableLogs) {
+//
+//            Log.e(RDALoggerConfig.TAG, editMessage(text), throwable);
+//        }
+//    }
 
     private static StackTraceElement getStackTrace() {
 
@@ -114,11 +133,6 @@ public final class RDALogger {
     }
 
     private static String getAnchorLink(String className, int lineNumber, int stackTraceIndex) {
-
-        for (int i = 0; i < Thread.currentThread().getStackTrace().length; i++) {
-
-            Log.i("RDA", "ANCOR " + i + " " + Thread.currentThread().getStackTrace()[i].getMethodName());
-        }
 
         try {
 
@@ -133,9 +147,9 @@ public final class RDALogger {
                 return "(" + className + ".java:" + lineNumber + ")";
             }
 
-        } catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException ignored) {
 
-//            e.printStackTrace();
+//            ignored.printStackTrace();
         }
 
         return "could't find the class";
@@ -143,7 +157,7 @@ public final class RDALogger {
 
     private static String editMessage(Object text) {
 
-        return IN_CLASS + getAnchorLink(StackTraceProcesses.getClassName(), StackTraceProcesses.getLineNumber(), 5) + IN_METHOD + StackTraceProcesses.getMethodName() + "\n" + checkUsage(text).toString() + "\n ";
+        return getAnchorLink(StackTraceProcesses.getClassName(), StackTraceProcesses.getLineNumber(), 5) + " - " + StackTraceProcesses.getMethodName() + "() -> " + checkUsage(text).toString();
     }
 
 
@@ -161,6 +175,14 @@ public final class RDALogger {
         } else {
 
             return object;
+        }
+    }
+
+    private static void sendToListener(LogType logType, String log) {
+
+        if (RDALoggerConfig.logListener != null) {
+
+            RDALoggerConfig.logListener.onLogReceived(logType, log);
         }
     }
 

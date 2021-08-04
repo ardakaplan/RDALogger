@@ -2,6 +2,8 @@ package com.ardakaplan.rdalogger;
 
 import android.util.Log;
 
+import java.util.logging.Logger;
+
 /**
  * Created by Arda Kaplan at 11-Apr-20
  * <p>
@@ -10,10 +12,11 @@ import android.util.Log;
 @SuppressWarnings({"UnusedReturnValue", "unused"})
 public final class RDALoggerConfig {
 
-    private static RDALoggerConfig rdaLoggerConfig = new RDALoggerConfig();
+    private static final RDALoggerConfig RDA_LOGGER_CONFIG = new RDALoggerConfig();
 
     static boolean enableLifeCycleLogs = false;
     static boolean enableLogs = false;
+    static RDALogListener logListener = null;
 
     private static final String RDALOGGER_TAG = "RDALogger";
 
@@ -31,7 +34,7 @@ public final class RDALoggerConfig {
      */
     public static RDALoggerConfig setup(String applicationName) {
 
-        Log.i(RDALOGGER_TAG, "Hello This is RDALogger by Arda Kaplan.");
+        Log.i(RDALOGGER_TAG, "Hello, This is RDALogger by Arda Kaplan.");
 
         Log.i(RDALOGGER_TAG, "For more information about usage please visit the URL -> https://github.com/ardakaplan/RDALogger ");
 
@@ -39,7 +42,7 @@ public final class RDALoggerConfig {
 
         TAG = applicationName;
 
-        return rdaLoggerConfig;
+        return RDA_LOGGER_CONFIG;
     }
 
     /**
@@ -54,7 +57,7 @@ public final class RDALoggerConfig {
 
         Log.i(RDALOGGER_TAG, "RDALogger logging enability : " + enableLogs);
 
-        return rdaLoggerConfig;
+        return RDA_LOGGER_CONFIG;
     }
 
     /**
@@ -69,7 +72,19 @@ public final class RDALoggerConfig {
 
         Log.i(RDALOGGER_TAG, "RDALogger life cycle logging enability : " + enableLifeCycleLogs);
 
-        return rdaLoggerConfig;
+        return RDA_LOGGER_CONFIG;
+    }
+
+    public RDALoggerConfig setListener(RDALogListener rdaLogListener) {
+
+        logListener = rdaLogListener;
+
+        return RDA_LOGGER_CONFIG;
+    }
+
+    public interface RDALogListener {
+
+        void onLogReceived(LogType logType, String log);
     }
 
 }

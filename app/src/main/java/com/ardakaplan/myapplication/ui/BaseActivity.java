@@ -1,4 +1,4 @@
-package com.ardakaplan.myapplication;
+package com.ardakaplan.myapplication.ui;
 
 import android.os.Bundle;
 
