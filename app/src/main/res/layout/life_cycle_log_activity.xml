@@ -4,21 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:orientation="vertical"
-    tools:context=".MainActivity"
-    tools:ignore="HardcodedText">
+    tools:context=".MainActivity">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Hello World!"
-        android:textSize="25sp" />
-
-    <Button
-        android:id="@+id/mainActivity_button_lifeCycle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="LIFE CYCLE" />
+        android:text="LIFE CYCLE LOG!"
+        android:textSize="25sp"
+        tools:ignore="HardcodedText" />
 
 </LinearLayout>

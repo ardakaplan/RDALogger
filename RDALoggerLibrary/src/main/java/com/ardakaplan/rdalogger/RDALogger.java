@@ -2,6 +2,8 @@ package com.ardakaplan.rdalogger;
 
 import android.util.Log;
 
+import java.util.logging.Logger;
+
 import kotlin.Metadata;
 
 /**
@@ -43,7 +45,9 @@ public final class RDALogger {
 
         if (RDALoggerConfig.enableLifeCycleLogs && RDALoggerConfig.enableLogs) {
 
-            Log.d(RDALoggerConfig.TAG, IN_CLASS + "(" + className + ".java:0)" + IN_METHOD + StackTraceProcesses.getMethodName() + "\nMETHOD_CALLED\n ");
+            Log.v(RDALoggerConfig.TAG, editMessageForLifeCycle(className));
+
+//            Log.d(RDALoggerConfig.TAG, IN_CLASS + "(" + className + ".java:0)" + IN_METHOD + StackTraceProcesses.getMethodName() + "\nMETHOD_CALLED\n ");
         }
     }
 
@@ -109,11 +113,16 @@ public final class RDALogger {
         return Thread.currentThread().getStackTrace()[8];
     }
 
-    private static String getAnchorLink(String className, int lineNumber) {
+    private static String getAnchorLink(String className, int lineNumber, int stackTraceIndex) {
+
+        for (int i = 0; i < Thread.currentThread().getStackTrace().length; i++) {
+
+            Log.i("RDA", "ANCOR " + i + " " + Thread.currentThread().getStackTrace()[i].getMethodName());
+        }
 
         try {
 
-            Class<?> act = Class.forName(Thread.currentThread().getStackTrace()[5].getClassName());
+            Class<?> act = Class.forName(Thread.currentThread().getStackTrace()[stackTraceIndex].getClassName());
 
             if (act.getAnnotation(Metadata.class) != null) {
 
@@ -134,7 +143,13 @@ public final class RDALogger {
 
     private static String editMessage(Object text) {
 
-        return IN_CLASS + getAnchorLink(StackTraceProcesses.getClassName(), StackTraceProcesses.getLineNumber()) + IN_METHOD + StackTraceProcesses.getMethodName() + "\n" + checkUsage(text).toString() + "\n ";
+        return IN_CLASS + getAnchorLink(StackTraceProcesses.getClassName(), StackTraceProcesses.getLineNumber(), 5) + IN_METHOD + StackTraceProcesses.getMethodName() + "\n" + checkUsage(text).toString() + "\n ";
+    }
+
+
+    private static String editMessageForLifeCycle(String className) {
+
+        return "LIFE CYCLE LOG -> (" + className + ".java:0) " + StackTraceProcesses.getMethodName() + "  CALLED";
     }
 
     private static Object checkUsage(Object object) {

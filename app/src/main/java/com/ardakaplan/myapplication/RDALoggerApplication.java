@@ -15,6 +15,6 @@ public class RDALoggerApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        RDALoggerConfig.setup(getString(R.string.app_name)).enableLogging(true);
+        RDALoggerConfig.setup(getString(R.string.app_name)).enableLogging(true).enableLifeCycleLogging(true);
     }
 }

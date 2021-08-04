@@ -35,9 +35,9 @@ public final class RDALoggerConfig {
 
         Log.i(RDALOGGER_TAG, "For more information about usage please visit the URL -> https://github.com/ardakaplan/RDALogger ");
 
-        TAG = applicationName;
-
         Log.i(RDALOGGER_TAG, "RDALogger initialized by " + TAG);
+
+        TAG = applicationName;
 
         return rdaLoggerConfig;
     }
