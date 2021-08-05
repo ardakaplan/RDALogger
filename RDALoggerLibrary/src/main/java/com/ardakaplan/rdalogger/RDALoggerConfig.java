@@ -32,13 +32,13 @@ public final class RDALoggerConfig {
      */
     public static RDALoggerConfig setup(String applicationName) {
 
+        TAG = applicationName;
+
         Log.i(RDALOGGER_TAG, "Hello, This is RDALogger by Arda Kaplan.");
 
-        Log.i(RDALOGGER_TAG, "For more information about usage please visit the URL -> https://github.com/ardakaplan/RDALogger ");
+        Log.i(RDALOGGER_TAG, "For more information about usage please visit -> https://github.com/ardakaplan/RDALogger ");
 
         Log.i(RDALOGGER_TAG, "RDALogger initialized by " + TAG);
-
-        TAG = applicationName;
 
         return RDA_LOGGER_CONFIG;
     }
@@ -82,6 +82,8 @@ public final class RDALoggerConfig {
     public RDALoggerConfig setListener(RDALogListener rdaLogListener) {
 
         logListener = rdaLogListener;
+
+        Log.i(RDALOGGER_TAG, "RDALogger logging listener set");
 
         return RDA_LOGGER_CONFIG;
     }
