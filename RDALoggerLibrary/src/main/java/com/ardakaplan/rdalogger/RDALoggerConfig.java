@@ -93,10 +93,10 @@ public final class RDALoggerConfig {
         /**
          * if you want to save every logs into file or database , you should use this method
          *
-         * @param RDALogFullData has full data about the log
+         * @param rdaLogFullData has full data about the log
          *                       anchor,logType,className,lineNumber,methodName,pureLog
          */
-        void onLogReceived(RDALogFullData RDALogFullData);
+        void onLogReceived(RDALogFullData rdaLogFullData);
     }
 
 }
