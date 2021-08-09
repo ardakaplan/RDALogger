@@ -13,7 +13,7 @@ class KotlinClass {
 
         fun test() {
 
-            RDALogger.info("THIS IS KOTLIN LOG")
+            RDALogger.info("this is TEST KOTLIN LOG")
         }
     }
 }

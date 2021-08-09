@@ -7,6 +7,7 @@ import com.ardakaplan.myapplication.R;
 import com.ardakaplan.myapplication.test.JavaClass;
 import com.ardakaplan.myapplication.test.KotlinClass;
 import com.ardakaplan.rdalogger.RDALogger;
+import com.ardakaplan.rdalogger.RDALoggerNonListened;
 
 public class MainActivity extends BaseActivity {
 
@@ -30,11 +31,19 @@ public class MainActivity extends BaseActivity {
         //JAVA TEST
         JavaClass.test();
 
+        //log to call listener
         RDALogger.info("this is INFO log");
         RDALogger.debug("this is DEBUG log");
         RDALogger.warn("this is WARN log");
         RDALogger.verbose("this is VERBOSE log");
         RDALogger.error("this is ERROR log");
+
+        //non listener logs
+        RDALoggerNonListened.info("this is NON LISTENER INFO log");
+        RDALoggerNonListened.debug("this is NON LISTENER DEBUG log");
+        RDALoggerNonListened.warn("this is NON LISTENER WARN log");
+        RDALoggerNonListened.verbose("this is NON LISTENER VERBOSE log");
+        RDALoggerNonListened.error("this is NON LISTENER ERROR log");
 
         //KOTLIN TEST
         KotlinClass.Companion.test();

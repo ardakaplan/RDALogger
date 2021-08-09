@@ -12,6 +12,6 @@ public class JavaClass {
 
     public static void test() {
 
-        RDALogger.info("THIS IS JAVA LOG");
+        RDALogger.info("this is TEST JAVA LOG");
     }
 }
