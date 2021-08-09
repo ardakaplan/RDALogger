@@ -1,6 +1,7 @@
 package com.ardakaplan.myapplication;
 
 import android.app.Application;
+import android.util.Log;
 
 import com.ardakaplan.rdalogger.RDALogFullData;
 import com.ardakaplan.rdalogger.RDALoggerConfig;
@@ -18,7 +19,7 @@ public class RDALoggerApplication extends Application {
 
         RDALoggerConfig.setup(getString(R.string.app_name))//label that you want to see in logcat (ex. application name)
                 .enableLogging(true)//enable log mechanizm, default is false
-                .enableLifeCycleLogging(false)//enable life cycle log mechanizm, default is false
+                .enableLifeCycleLogging(true)//enable life cycle log mechanizm, default is false
                 .setListener(new RDALoggerConfig.RDALogListener() {//log listener
 
                     @Override

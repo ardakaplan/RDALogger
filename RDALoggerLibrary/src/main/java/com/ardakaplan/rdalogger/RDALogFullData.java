@@ -25,7 +25,7 @@ public class RDALogFullData {
 
         try {
 
-            Class<?> act = Class.forName(Thread.currentThread().getStackTrace()[6].getClassName());
+            Class<?> act = Class.forName(Thread.currentThread().getStackTrace()[7].getClassName());
 
             if (act.getAnnotation(Metadata.class) != null) {
 
