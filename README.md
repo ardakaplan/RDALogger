@@ -111,5 +111,5 @@ And if you click the anchor, you can jump the log line.
 	- Adding kotlin support
 - **v2.0.1**
 	- Adding log listener
-- **v2.0.2**
+- **v2.0.3**
   - Adding non listener log
