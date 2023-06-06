@@ -37,6 +37,7 @@ public class MainActivity extends BaseActivity {
         RDALogger.warn("this is WARN log");
         RDALogger.verbose("this is VERBOSE log");
         RDALogger.error("this is ERROR log");
+        RDALogger.error(new RuntimeException("TEST EXCEPTION"));
 
         //non listener logs
         RDALoggerNonListened.info("this is NON LISTENER INFO log");
@@ -44,6 +45,7 @@ public class MainActivity extends BaseActivity {
         RDALoggerNonListened.warn("this is NON LISTENER WARN log");
         RDALoggerNonListened.verbose("this is NON LISTENER VERBOSE log");
         RDALoggerNonListened.error("this is NON LISTENER ERROR log");
+        RDALoggerNonListened.error(new RuntimeException("TEST EXCEPTION"));
 
         //KOTLIN TEST
         KotlinClass.Companion.test();

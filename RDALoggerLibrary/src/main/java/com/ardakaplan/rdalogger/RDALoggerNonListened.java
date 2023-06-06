@@ -44,9 +44,14 @@ public final class RDALoggerNonListened extends BaseRDALogger {
         log(LogType.VERBOSE, object);
     }
 
-    public static void error(Object object) {
+    public static void error(String message) {
 
-        log(LogType.ERROR, object);
+        log(LogType.ERROR, message);
+    }
+
+    public static void error(Exception exception) {
+
+        log(LogType.ERROR, exception);
     }
 
     private static void log(LogType logType, Object object) {
