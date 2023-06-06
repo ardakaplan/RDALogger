@@ -2,6 +2,10 @@ package com.ardakaplan.rdalogger;
 
 import android.util.Log;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
+
 /**
  * To use this class, once you must initialize and set log mechanism for normal/http or lifecycle
  * <p>
@@ -87,7 +91,18 @@ class BaseRDALogger {
 
         } else {
 
-            return new RDALogFullData(logType, StackTraceProcesses.getClassName(), StackTraceProcesses.getLineNumber(), StackTraceProcesses.getMethodName(), checkUsage(object).toString());
+            if (object instanceof Exception) {
+
+                Writer writer = new StringWriter();
+                ((Exception) object).printStackTrace(new PrintWriter(writer));
+                String exceptionStackTrace = writer.toString();
+
+                return new RDALogFullData(logType, StackTraceProcesses.getClassName(), StackTraceProcesses.getLineNumber(), StackTraceProcesses.getMethodName(), exceptionStackTrace);
+
+            } else {
+
+                return new RDALogFullData(logType, StackTraceProcesses.getClassName(), StackTraceProcesses.getLineNumber(), StackTraceProcesses.getMethodName(), checkUsage(object).toString());
+            }
         }
     }
 

@@ -59,9 +59,14 @@ public final class RDALogger extends BaseRDALogger {
         log(LogType.VERBOSE, object, false);
     }
 
-    public static void error(Object object) {
+    public static void error(String message) {
 
-        log(LogType.ERROR, object, false);
+        log(LogType.ERROR, message, false);
+    }
+
+    public static void error(Exception exception) {
+
+        log(LogType.ERROR, exception, false);
     }
 
     private static void log(LogType logType, Object object, boolean isLifeCycle) {
