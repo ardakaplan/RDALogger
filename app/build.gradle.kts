@@ -11,8 +11,10 @@ android {
     defaultConfig {
 
         applicationId = "com.ardakaplan.testapp.rdalogger"
+
         minSdk = 24
         targetSdk = 35
+
         versionCode = 1
         versionName = "1.0"
 
@@ -22,10 +24,13 @@ android {
     buildTypes {
 
         release {
+
             isMinifyEnabled = false
+
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
+
     compileOptions {
 
         sourceCompatibility = JavaVersion.VERSION_11
@@ -38,10 +43,10 @@ android {
 
 dependencies {
 
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
+//    implementation(libs.androidx.core.ktx)
+//    implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.appcompat)
-    implementation(libs.androidx.activity)
+//    implementation(libs.androidx.activity)
 
     //    RDA LIB
     implementation(project(":RDALogger"))

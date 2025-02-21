@@ -1,11 +1,9 @@
-package com.ardakaplan.testapp.rdalogger.ui
+package com.ardakaplan.testapp.rdalogger
 
 import android.app.Application
-import android.util.Log
 import com.ardakaplan.library.rdalogger.RDALogFullData
 import com.ardakaplan.library.rdalogger.RDALogListener
 import com.ardakaplan.library.rdalogger.RDALoggerConfig
-import com.ardakaplan.testapp.rdalogger.R
 
 /**
  * Created by Arda Kaplan on 21/02/2025 at 15:23.
