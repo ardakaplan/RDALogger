@@ -1,8 +1,11 @@
-  [![](https://jitpack.io/v/ardakaplan/RDALogger.svg)](https://jitpack.io/#ardakaplan/RDALogger)
+[![](https://jitpack.io/v/ardakaplan/RDALogger.svg)](https://jitpack.io/#ardakaplan/RDALogger)
+
+
+
 <img src="https://raw.githubusercontent.com/ardakaplan/RDALogger/master/images/image.png">  
 
 ## What is this for?
-You can see your log with **code line number**, **wrapper method** and **class name**. 
+You can see your log with **code line number**, **wrapper method** and **class name**.
 
 And if you click the anchor, you can jump the log line.
 
@@ -10,10 +13,10 @@ Now **kotlin** support is enabled =)
 
 <img src="https://raw.githubusercontent.com/ardakaplan/RDALogger/master/images/output.png">  
 
-## Prerequisites  
-  
-Add this in your root `build.gradle` file (**not** your module (app) `build.gradle` file):  
-  
+## Prerequisites
+
+Add this in your root `build.gradle` file (**not** your module (app) `build.gradle` file):
+
 ```gradle  
 allprojects {  
    repositories {  
@@ -23,10 +26,10 @@ allprojects {
 }  
 ``` 
 
-## Dependency  
-  
-Add this to your module's `build.gradle` file (make sure the version matches the JitPack badge above):  
-  
+## Dependency
+
+Add this to your module's `build.gradle` file (make sure the version matches the JitPack badge above):
+
 ```gradle  
 dependencies {  
    ...  
@@ -40,23 +43,29 @@ Starting **RDALogger**
 
 ```java
 RDALoggerConfig.setup(getString(R.string.app_name))//label that you want to see in logcat (ex. application name)
-                .enableLogging(true)//enable log mechanizm, default is false
-                .enableLifeCycleLogging(false)//enable life cycle log mechanizm, default is false
-                .setListener(new RDALoggerConfig.RDALogListener() {//log listener
+		.enableLogging(true)//enable log mechanizm, default is false
+            .enableLifeCycleLogging(true)//enable life cycle log mechanizm, default is false
+            .setListener(object : RDALogListener {//log listener
 
-                    @Override
-                    public void onLogReceived(RDALogFullData rdaLogFullData) {
-
-                        /**
-                         *{@link RDALogFullData} has full data about the log,
-                         * anchor,logType,className,lineNumber,methodName,pureLog
-                         *
-                         * called for every written logs,
-                         *
-                         * save to database, write to file, do what you want with this full log item
-                         */
-                    }
-                });
+	override fun onLogReceived(rdaLogFullData : RDALogFullData) {
+		/**
+		 *{@link RDALogFullData} has full data about the log,
+		 * anchor,logType,className,lineNumber,methodName,pureLog
+		 *
+		 * called for every written logs,
+		 *
+		 * save to database, write to file, do what you want with this full log item
+		 */
+		/**
+		 *{@link RDALogFullData} has full data about the log,
+		 * anchor,logType,className,lineNumber,methodName,pureLog
+		 *
+		 * called for every written logs,
+		 *
+		 * save to database, write to file, do what you want with this full log item
+		 */
+	}
+})
 ```
 
 ## Usage
@@ -96,20 +105,8 @@ RDALogger.logLifeCycle(getClass().getSimpleName());
 ```  
 
 ## Logcat Output
-You can see your log with **code line number**, **wrapper method** and **class name**. 
+You can see your log with **code line number**, **wrapper method** and **class name**.
 
 And if you click the anchor, you can jump the log line.
 
 <img src="https://raw.githubusercontent.com/ardakaplan/RDALogger/master/images/output.png">  
- 
-
-## Change Log
-
-- **v1.0.0**
- 	- Library created
-- **v2.0.0**
-	- Adding kotlin support
-- **v2.0.1**
-	- Adding log listener
-- **v2.0.3**
-  - Adding non listener log
