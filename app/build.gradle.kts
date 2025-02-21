@@ -12,11 +12,11 @@ android {
 
         applicationId = "com.ardakaplan.testapp.rdalogger"
 
-        minSdk = 24
+        minSdk = 21
         targetSdk = 35
 
         versionCode = 1
-        versionName = "1.0"
+        versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -43,10 +43,7 @@ android {
 
 dependencies {
 
-//    implementation(libs.androidx.core.ktx)
-//    implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.appcompat)
-//    implementation(libs.androidx.activity)
 
     //    RDA LIB
     implementation(project(":RDALogger"))

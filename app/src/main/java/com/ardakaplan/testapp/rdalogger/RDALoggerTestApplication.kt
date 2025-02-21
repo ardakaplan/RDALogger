@@ -49,6 +49,6 @@ class RDALoggerTestApplication : Application() {
 //                                "pureLog -> " + rdaLogFullData.pureLog
 //                    )
                 }
-            });
+            })
     }
 }
