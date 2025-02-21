@@ -76,13 +76,22 @@ object RDALogger {
 
     private fun getLogcatLog(logType : LogType, `object` : Any, isLifeCycle : Boolean) : RDALogFullData {
 
-        return if (isLifeCycle) {
+        val className : String
+        val lineNumber : Int
+        var pureLog = ""
 
-            RDALogFullData(logType, `object`.toString(), 0, StackTraceProcesses.getMethodName(), "")
+        if (isLifeCycle) {
+
+            className = `object`.toString()
+
+            lineNumber = 0
 
         } else {
 
-            val pureLog = if (`object` is Exception) {
+            lineNumber = StackTraceProcesses.getLineNumber()
+            className = StackTraceProcesses.getClassName()
+
+            pureLog = if (`object` is Exception) {
 
                 val writer : Writer = StringWriter()
 
@@ -93,46 +102,44 @@ object RDALogger {
             } else {
 
                 checkUsage(`object`).toString()
-
             }
-
-            RDALogFullData(logType, StackTraceProcesses.getClassName(), StackTraceProcesses.getLineNumber(), StackTraceProcesses.getMethodName(), pureLog)
         }
+
+        return RDALogFullData(logType, className, lineNumber, StackTraceProcesses.getMethodName(), pureLog)
     }
 
-    private fun checkUsage(`object` : Any?) : Any {
-        return `object` ?: "OBJECT IS NULL, NOTHING TO SHOW."
-    }
+    private fun checkUsage(`object` : Any?) : Any = `object` ?: "OBJECT IS NULL, NOTHING TO SHOW."
 
     /*
-     *All StackTrace operations should be in this class for better understanding
+     * All StackTrace operations should be in this class for better understanding
      */
-
     object StackTraceProcesses {
 
-        private fun getStackTrace() : StackTraceElement {
+        private fun getStackTrace() : StackTraceElement? {
 
-//            Thread.currentThread().stackTrace.forEachIndexed { index, stackTraceElement ->
-//
-//                Log.i("AAAAA", " aaaa -> " + stackTraceElement.className + " index> " + index)
-//            }
+            return try {
 
+                return Thread.currentThread().stackTrace[8]
 
-            return Thread.currentThread().stackTrace[8]
+            } catch (e : Exception) {
+
+                null
+            }
         }
 
-        fun getMethodName() : String = getStackTrace().methodName
+        fun getMethodName() : String = getStackTrace()?.methodName ?: "not_found"
 
-        fun getLineNumber() : Int = getStackTrace().lineNumber
+        fun getLineNumber() : Int = getStackTrace()?.lineNumber ?: 0
 
         fun getClassName() : String {
 
-            var className : String = getStackTrace().className
+            var className : String = getStackTrace()?.className ?: "not_found"
 
             className = className.substring(className.lastIndexOf(".") + 1)
 
             //inner classes put $ on the classname, so we clear it off
             if (className.contains("$")) {
+
                 className = className.substring(0, className.indexOf("$"))
             }
 
