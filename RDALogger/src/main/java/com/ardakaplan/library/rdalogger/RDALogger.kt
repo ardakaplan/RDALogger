@@ -19,7 +19,7 @@ object RDALogger {
      *
      * @param className className, fragment or activity name
      */
-    fun logLifeCycle(className : String, callListener : Boolean = true) {
+    fun logLifeCycle(className : String?, callListener : Boolean = true) {
 
         if (RDALoggerConfig.enableLifeCycleLogs) {
 
@@ -27,19 +27,19 @@ object RDALogger {
         }
     }
 
-    fun info(`object` : Any, callListener : Boolean = true) = log(LogType.INFO, `object`, false, callListener)
+    fun info(`object` : Any?, callListener : Boolean = true) = log(LogType.INFO, `object`, false, callListener)
 
-    fun debug(`object` : Any, callListener : Boolean = true) = log(LogType.DEBUG, `object`, false, callListener)
+    fun debug(`object` : Any?, callListener : Boolean = true) = log(LogType.DEBUG, `object`, false, callListener)
 
-    fun warn(`object` : Any, callListener : Boolean = true) = log(LogType.WARN, `object`, false, callListener)
+    fun warn(`object` : Any?, callListener : Boolean = true) = log(LogType.WARN, `object`, false, callListener)
 
-    fun verbose(`object` : Any, callListener : Boolean = true) = log(LogType.VERBOSE, `object`, false, callListener)
+    fun verbose(`object` : Any?, callListener : Boolean = true) = log(LogType.VERBOSE, `object`, false, callListener)
 
-    fun error(message : String, callListener : Boolean = true) = log(LogType.ERROR, message, false, callListener)
+    fun error(message : String?, callListener : Boolean = true) = log(LogType.ERROR, message, false, callListener)
 
-    fun error(throwable : Throwable, callListener : Boolean = true) = log(LogType.ERROR, throwable, false, callListener)
+    fun error(throwable : Throwable?, callListener : Boolean = true) = log(LogType.ERROR, throwable, false, callListener)
 
-    private fun log(logType : LogType, `object` : Any, isLifeCycle : Boolean = false, callListener : Boolean = false) {
+    private fun log(logType : LogType, `object` : Any?, isLifeCycle : Boolean = false, callListener : Boolean = false) {
 
         if (RDALoggerConfig.enableLogs) {
 
@@ -74,7 +74,7 @@ object RDALogger {
         }
     }
 
-    private fun getLogcatLog(logType : LogType, `object` : Any, isLifeCycle : Boolean) : RDALogFullData {
+    private fun getLogcatLog(logType : LogType, `object` : Any?, isLifeCycle : Boolean) : RDALogFullData {
 
         val className : String
         val lineNumber : Int
@@ -82,7 +82,7 @@ object RDALogger {
 
         if (isLifeCycle) {
 
-            className = `object`.toString()
+            className = `object`?.toString() ?: "MESSAGE IS NULL, NOTHING TO LOG"
 
             lineNumber = 0
 
@@ -91,18 +91,27 @@ object RDALogger {
             lineNumber = StackTraceProcesses.getLineNumber()
             className = StackTraceProcesses.getClassName()
 
-            pureLog = if (`object` is Exception) {
+            pureLog = if (`object` == null) {
 
-                val writer : Writer = StringWriter()
-
-                `object`.printStackTrace(PrintWriter(writer))
-
-                writer.toString()
+                "MESSAGE IS NULL, NOTHING TO LOG"
 
             } else {
 
-                checkUsage(`object`).toString()
+                if (`object` is Exception) {
+
+                    val writer : Writer = StringWriter()
+
+                    `object`.printStackTrace(PrintWriter(writer))
+
+                    writer.toString()
+
+                } else {
+
+                    checkUsage(`object`).toString()
+                }
             }
+
+
         }
 
         return RDALogFullData(logType, className, lineNumber, StackTraceProcesses.getMethodName(), pureLog)
